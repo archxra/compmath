@@ -1,0 +1,101 @@
+/* Общий стиль */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+/* Заголовок */
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* Форма выбора метода */
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Динамическая форма */
+#dynamic-form {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Инпуты */
+input {
+    width: calc(100% - 16px);
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Кнопки */
+button {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* График */
+#graph-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#graph-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    background: white;
+}
+
+/* Таблица результатов */
+#result-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#result-table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+#result-table th, #result-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#result-table th {
+    background: #007bff;
+    color: white;
+}
