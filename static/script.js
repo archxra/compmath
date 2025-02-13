@@ -182,40 +182,36 @@ function displayResult(data) {
 
     let outputHTML = `<h3>📌 Результаты вычислений:</h3>`;
 
-    // Если ответ содержит график напрямую (метод 1)
+    // Если метод 1, график возвращается напрямую в data.graph
     if (data.graph && typeof data.graph === "string") {
         outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${data.graph}" alt="Graph" style="max-width:100%; height:auto;">`;
     }
-    // Если ответ находится в data.result (для остальных методов)
+    // Если метод не 1, результат находится в data.result
     else if (data.result) {
+        // Если в data.result есть график, выводим его как изображение
+        if (data.result.graph && typeof data.result.graph === "string") {
+            outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${data.result.graph}" alt="Graph" style="max-width:100%; height:auto;">`;
+        }
+        // Выводим остальные данные
         for (let key in data.result) {
+            // Пропускаем ключ "graph", если он уже обработан
+            if (key === "graph") continue;
             let value = data.result[key];
-            // Если ключ - "graph", выводим изображение
-            if (key === "graph" && typeof value === "string" && value.length > 10) {
-                outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${value}" alt="Graph" style="max-width:100%; height:auto;">`;
-            }
-            // Если это корни (массив чисел)
-            else if (key === "roots" && Array.isArray(value)) {
+            if (key === "roots" && Array.isArray(value)) {
                 outputHTML += `<h4>🔹 ${key}:</h4><table><tbody>`;
                 value.forEach(root => {
                     outputHTML += `<tr><td>${root.toFixed(6)}</td></tr>`;
                 });
                 outputHTML += `</tbody></table>`;
-            }
-            // Если число
-            else if (typeof value === "number") {
+            } else if (typeof value === "number") {
                 outputHTML += `<p>✅ <strong>${key}:</strong> ${value.toFixed(6)}</p>`;
-            }
-            // Если это массив (например, итерационные значения)
-            else if (Array.isArray(value)) {
+            } else if (Array.isArray(value)) {
                 outputHTML += `<h4>🔹 ${key}:</h4><table><tbody>`;
                 value.forEach(item => {
                     outputHTML += `<tr><td>${item}</td></tr>`;
                 });
                 outputHTML += `</tbody></table>`;
-            }
-            // Иначе выводим как текст
-            else {
+            } else {
                 outputHTML += `<p>🔹 <strong>${key}:</strong> ${value}</p>`;
             }
         }
