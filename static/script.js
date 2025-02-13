@@ -182,24 +182,40 @@ function displayResult(data) {
 
     let outputHTML = `<h3>📌 Результаты вычислений:</h3>`;
 
-    // Если приходит график, выводим его
+    // Если ответ содержит график напрямую (метод 1)
     if (data.graph && typeof data.graph === "string") {
         outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${data.graph}" alt="Graph" style="max-width:100%; height:auto;">`;
     }
-    // Если результат находится в data.result, обрабатываем его
+    // Если ответ находится в data.result (для остальных методов)
     else if (data.result) {
-        // Если data.result является объектом, можно его распечатать
         for (let key in data.result) {
             let value = data.result[key];
-            if (key === "roots" && Array.isArray(value)) {
+            // Если ключ - "graph", выводим изображение
+            if (key === "graph" && typeof value === "string" && value.length > 10) {
+                outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${value}" alt="Graph" style="max-width:100%; height:auto;">`;
+            }
+            // Если это корни (массив чисел)
+            else if (key === "roots" && Array.isArray(value)) {
                 outputHTML += `<h4>🔹 ${key}:</h4><table><tbody>`;
                 value.forEach(root => {
                     outputHTML += `<tr><td>${root.toFixed(6)}</td></tr>`;
                 });
                 outputHTML += `</tbody></table>`;
-            } else if (typeof value === "number") {
+            }
+            // Если число
+            else if (typeof value === "number") {
                 outputHTML += `<p>✅ <strong>${key}:</strong> ${value.toFixed(6)}</p>`;
-            } else {
+            }
+            // Если это массив (например, итерационные значения)
+            else if (Array.isArray(value)) {
+                outputHTML += `<h4>🔹 ${key}:</h4><table><tbody>`;
+                value.forEach(item => {
+                    outputHTML += `<tr><td>${item}</td></tr>`;
+                });
+                outputHTML += `</tbody></table>`;
+            }
+            // Иначе выводим как текст
+            else {
                 outputHTML += `<p>🔹 <strong>${key}:</strong> ${value}</p>`;
             }
         }
