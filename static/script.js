@@ -14,16 +14,67 @@ function updateForm() {
             <label for="coeffC">Coefficient C:</label>
             <input type="number" id="coeffC">
         `;
-    } else if (method === "3") { // Relaxation
+    } else if (method === "3") { // Relaxation Method
         formContainer.innerHTML = `
-            <label for="matrix-size">Matrix Size:</label>
-            <input type="number" id="matrix-size" value="3" min="2" max="10" onchange="generateMatrix()">
-            <div id="matrix-container"></div>
+            <label for="x0">Initial Guess (x0):</label>
+            <input type="number" id="x0">
+            <label for="tol">Tolerance:</label>
+            <input type="number" step="0.000001" id="tol">
+            <label for="max_iter">Max Iterations:</label>
+            <input type="number" id="max_iter">
         `;
-        generateMatrix();
+    } else if (method === "4") { // Power Method
+        formContainer.innerHTML = `
+            <div style="margin-bottom: 10px;">
+                <p style="font-weight: bold;">Введите значения для матрицы 2x2:</p>
+                <table style="margin: 0; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 5px;">
+                            <input type="number" id="a11" placeholder="A11" style="width: 60px; text-align: center;">
+                        </td>
+                        <td style="padding: 5px;">
+                            <input type="number" id="a12" placeholder="A12" style="width: 60px; text-align: center;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;">
+                            <input type="number" id="a21" placeholder="A21" style="width: 60px; text-align: center;">
+                        </td>
+                        <td style="padding: 5px;">
+                            <input type="number" id="a22" placeholder="A22" style="width: 60px; text-align: center;">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-top: 10px;">
+                <label for="tol_power">Tolerance:</label>
+                <input type="number" step="0.000001" id="tol_power" style="width: 100px; margin-right: 10px;">
+                <label for="max_iter_power">Max Iterations:</label>
+                <input type="number" id="max_iter_power" style="width: 80px;">
+            </div>
+        `;    
+    } else if (method === "5") { // Exponential Fit
+        formContainer.innerHTML = `
+            <label for="x_values">x values (comma-separated):</label>
+            <input type="text" id="x_values">
+            <label for="y_values">y values (comma-separated):</label>
+            <input type="text" id="y_values">
+        `;
+    } else if (method === "6") { // Cubic Spline
+        formContainer.innerHTML = `
+            <label for="x_values_spline">x values (comma-separated):</label>
+            <input type="text" id="x_values_spline">
+            <label for="y_values_spline">y values (comma-separated):</label>
+            <input type="text" id="y_values_spline">
+        `;
+    } else if (method === "7") { // Picard Method
+        formContainer.innerHTML = `
+            <label for="picard_x">x value:</label>
+            <input type="number" step="0.01" id="picard_x">
+        `;
     } else if (method === "8") { // Simpson's Rule
         formContainer.innerHTML = `
-            <label for="integral-func">Function:</label>
+            <label for="integral-func">Function (not used here, placeholder):</label>
             <input type="text" id="integral-func">
             <label for="a">Lower Limit:</label>
             <input type="number" id="a">
@@ -59,32 +110,53 @@ function generateMatrix() {
 
 function compute() {
     let method = document.getElementById("method").value;
-    let table = document.getElementById("result-table");
-    let graphContainer = document.getElementById("graph-container");
-
-    if (!table || !graphContainer) {
-        console.error("❌ Ошибка: Не найдены элементы для вывода!");
-        return;
-    }
-
-    table.innerHTML = "<tr><td>⌛ Обрабатываем запрос...</td></tr>";
-
     let params = {};
+
     if (method === "2") { // Find Roots
         params = {
             coeffA: parseFloat(document.getElementById("coeffA").value),
             coeffB: parseFloat(document.getElementById("coeffB").value),
-            coeffC: parseFloat(document.getElementById("coeffC").value),
+            coeffC: parseFloat(document.getElementById("coeffC").value)
+        };
+    } else if (method === "3") { // Relaxation Method
+        params = {
+            x0: parseFloat(document.getElementById("x0").value),
+            tol: parseFloat(document.getElementById("tol").value),
+            max_iter: parseInt(document.getElementById("max_iter").value)
+        };
+    } else if (method === "4") { // Power Method
+        params = {
+            a11: parseFloat(document.getElementById("a11").value),
+            a12: parseFloat(document.getElementById("a12").value),
+            a21: parseFloat(document.getElementById("a21").value),
+            a22: parseFloat(document.getElementById("a22").value),
+            tol: parseFloat(document.getElementById("tol_power").value),
+            max_iter: parseInt(document.getElementById("max_iter_power").value)
+        };
+    } else if (method === "5") { // Exponential Fit
+        params = {
+            x_values: document.getElementById("x_values").value,
+            y_values: document.getElementById("y_values").value
+        };
+    } else if (method === "6") { // Cubic Spline
+        params = {
+            x_values: document.getElementById("x_values_spline").value,
+            y_values: document.getElementById("y_values_spline").value
+        };
+    } else if (method === "7") { // Picard Method
+        params = {
+            x: parseFloat(document.getElementById("picard_x").value)
         };
     } else if (method === "8") { // Simpson's Rule
         params = {
             func: document.getElementById("integral-func").value,
             a: parseFloat(document.getElementById("a").value),
             b: parseFloat(document.getElementById("b").value),
-            n: parseInt(document.getElementById("n").value),
+            n: parseInt(document.getElementById("n").value)
         };
     }
 
+    // Далее отправка AJAX-запроса, как у тебя уже реализована...
     fetch("/compute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +166,7 @@ function compute() {
     .then(data => displayResult(data))
     .catch(error => {
         console.error("❌ Ошибка запроса:", error);
-        table.innerHTML = "<tr><td>❌ Ошибка при запросе к серверу</td></tr>";
+        document.getElementById("result-table").innerHTML = "<tr><td>❌ Ошибка при запросе к серверу</td></tr>";
     });
 }
 
