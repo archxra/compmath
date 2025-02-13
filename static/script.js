@@ -2,7 +2,7 @@ function updateForm() {
     let method = document.getElementById("method").value;
     let formContainer = document.getElementById("dynamic-form");
     formContainer.innerHTML = ""; // Очищаем форму
-
+  
     if (method === "1") { // Plot Graph
         formContainer.innerHTML = "<p>График функции будет построен автоматически.</p>";
     } else if (method === "2") { // Find Roots
@@ -52,7 +52,7 @@ function updateForm() {
                 <label for="max_iter_power">Max Iterations:</label>
                 <input type="number" id="max_iter_power" style="width: 80px;">
             </div>
-        `;    
+        `;
     } else if (method === "5") { // Exponential Fit
         formContainer.innerHTML = `
             <label for="x_values">x values (comma-separated):</label>
@@ -74,44 +74,20 @@ function updateForm() {
         `;
     } else if (method === "8") { // Simpson's Rule
         formContainer.innerHTML = `
-            <label for="integral-func">Function (not used here, placeholder):</label>
-            <input type="text" id="integral-func">
-            <label for="a">Lower Limit:</label>
-            <input type="number" id="a">
-            <label for="b">Upper Limit:</label>
-            <input type="number" id="b">
-            <label for="n">Subintervals (even number):</label>
-            <input type="number" id="n" min="2" step="2">
+            <label for="x_values_integral">x values (comma-separated):</label>
+            <input type="text" id="x_values_integral">
+            <label for="f_values_integral">f(x) values (comma-separated):</label>
+            <input type="text" id="f_values_integral">
+            <label for="n">Subintervals (odd number of points):</label>
+            <input type="number" id="n" min="3" step="2">
         `;
     }
-}
-
-function generateMatrix() {
-    let size = document.getElementById("matrix-size").value;
-    let container = document.getElementById("matrix-container");
-    container.innerHTML = "";
-    let table = document.createElement("table");
-
-    for (let i = 0; i < size; i++) {
-        let row = document.createElement("tr");
-        for (let j = 0; j < size; j++) {
-            let cell = document.createElement("td");
-            let input = document.createElement("input");
-            input.type = "number";
-            input.id = `matrix-${i}-${j}`;
-            cell.appendChild(input);
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-    }
-
-    container.appendChild(table);
-}
-
-function compute() {
+  }
+  
+  function compute() {
     let method = document.getElementById("method").value;
     let params = {};
-
+  
     if (method === "2") { // Find Roots
         params = {
             coeffA: parseFloat(document.getElementById("coeffA").value),
@@ -149,14 +125,12 @@ function compute() {
         };
     } else if (method === "8") { // Simpson's Rule
         params = {
-            func: document.getElementById("integral-func").value,
-            a: parseFloat(document.getElementById("a").value),
-            b: parseFloat(document.getElementById("b").value),
+            x_values: document.getElementById("x_values_integral").value,
+            f_values: document.getElementById("f_values_integral").value,
             n: parseInt(document.getElementById("n").value)
         };
     }
-
-    // Далее отправка AJAX-запроса, как у тебя уже реализована...
+  
     fetch("/compute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,25 +142,25 @@ function compute() {
         console.error("❌ Ошибка запроса:", error);
         document.getElementById("result-table").innerHTML = "<tr><td>❌ Ошибка при запросе к серверу</td></tr>";
     });
-}
-
-function displayResult(data) {
+  }
+  
+  function displayResult(data) {
     console.log("✅ Ответ сервера:", data);
     let resultContainer = document.getElementById("result-table");
     resultContainer.innerHTML = "";
-
+  
     if (data.error) {
         resultContainer.innerHTML = `<div class="error-message">❌ Ошибка: ${data.error}</div>`;
         return;
     }
-
+  
     let outputHTML = `<h3>📌 Результаты вычислений:</h3>`;
-
+  
     // Если метод 1, график возвращается напрямую в data.graph
     if (data.graph && typeof data.graph === "string") {
         outputHTML += `<h4>📊 График:</h4><img src="data:image/png;base64,${data.graph}" alt="Graph" style="max-width:100%; height:auto;">`;
     }
-    // Если метод не 1, результат находится в data.result
+    // Если ответ находится в data.result (для остальных методов)
     else if (data.result) {
         // Если в data.result есть график, выводим его как изображение
         if (data.result.graph && typeof data.result.graph === "string") {
@@ -194,7 +168,6 @@ function displayResult(data) {
         }
         // Выводим остальные данные
         for (let key in data.result) {
-            // Пропускаем ключ "graph", если он уже обработан
             if (key === "graph") continue;
             let value = data.result[key];
             if (key === "roots" && Array.isArray(value)) {
@@ -216,21 +189,22 @@ function displayResult(data) {
             }
         }
     }
-
+  
     resultContainer.innerHTML = outputHTML;
-}
-
-function clearForm() {
+  }
+  
+  function clearForm() {
     document.getElementById("dynamic-form").innerHTML = "";
     document.getElementById("graph-container").innerHTML = "";
     document.getElementById("result-table").innerHTML = "";
-}
-
-document.addEventListener("DOMContentLoaded", function() {
+  }
+  
+  document.addEventListener("DOMContentLoaded", function() {
     let computeBtn = document.getElementById("compute-button");
     if (computeBtn) {
         computeBtn.addEventListener("click", compute);
     } else {
         console.error("Кнопка Calculate не найдена!");
     }
-});
+  });
+  

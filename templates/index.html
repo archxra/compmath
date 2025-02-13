@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computational Math</title>
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computational Math</title>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Computational Math Solver</h2>
+  <h2>Computational Math Solver</h2>
 
-    <form id="form">
-        <label for="method">Choose a method:</label>
-        <select id="method" name="method" onchange="updateForm()">
-            <option value="1">Plot Graph</option>
-            <option value="2">Find Roots</option>
-            <option value="3">Relaxation Method</option>
-            <option value="4">Power Method</option>
-            <option value="5">Exponential Fit</option>
-            <option value="6">Cubic Spline</option>
-            <option value="7">Picard Method</option>
-            <option value="8">Simpson's Rule</option>
-        </select>
-    
-        <div id="dynamic-form"></div>
-    
-        <button type="button" id="compute-button">Calculate</button>
-        <button type="button" onclick="clearForm()">Clear</button>
-    </form>
-    
-    <!-- Контейнер для графика -->
-    <div id="graph-container" style="margin-top: 20px;"></div>
+  <form id="form">
+    <label for="method">Choose a method:</label>
+    <select id="method" name="method" onchange="updateForm()">
+      <option value="1">Plot Graph</option>
+      <option value="2">Find Roots</option>
+      <option value="3">Relaxation Method</option>
+      <option value="4">Power Method</option>
+      <option value="5">Exponential Fit</option>
+      <option value="6">Cubic Spline</option>
+      <option value="7">Picard Method</option>
+      <option value="8">Simpson's Rule</option>
+    </select>
+  
+    <div id="dynamic-form"></div>
+  
+    <button type="button" id="compute-button">Calculate</button>
+    <button type="button" onclick="clearForm()">Clear</button>
+  </form>
+  
+  <!-- Контейнер для графика -->
+  <div id="graph-container" style="margin-top: 20px;"></div>
 
-    <!-- Таблица для вывода результатов -->
-    <table id="result-table" border="1" style="width: 100%; margin-top: 10px;"></table>
+  <!-- Таблица для вывода результатов -->
+  <table id="result-table" border="1" style="width: 100%; margin-top: 10px;"></table>
 
 </body>
 </html>

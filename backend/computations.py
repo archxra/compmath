@@ -85,7 +85,6 @@ def find_roots(params):
     plt.figure()
     plt.plot(x_vals, y_vals, label=f"{a}x² + {b}x + {c}", color="green")
     plt.axhline(0, color='black', linewidth=0.5)
-    # Отметим найденные корни
     for r in roots:
         plt.plot(r, 0, "ro", markersize=8)
     plt.xlabel("x")
@@ -107,7 +106,7 @@ def relaxation_method(params):
     tol = float(params.get('tol', 1e-6))
     max_iter = int(params.get('max_iter', 100))
     
-    def f(x): return np.cos(x)  # Примерная функция
+    def f(x): return np.cos(x)
     
     iterations_list = [x0]
     x = x0
@@ -120,7 +119,6 @@ def relaxation_method(params):
         x = x_next
         count += 1
 
-    # Построим график сходимости (итерация vs значение)
     plt.figure()
     plt.plot(iterations_list, "o-", color="purple")
     plt.xlabel("Номер итерации")
@@ -147,7 +145,6 @@ def power_method(params):
         x_new /= lambda_approx
         convergence.append(x_new.copy())
         if np.linalg.norm(x_new - x) < tol:
-            # Построим график сходимости: разница между итерациями
             differences = [np.linalg.norm(convergence[j+1]-convergence[j]) for j in range(len(convergence)-1)]
             plt.figure()
             plt.plot(range(len(differences)), differences, "o-", color="orange")
@@ -178,7 +175,6 @@ def exponential_fit(params):
     a = np.exp(coefficients[1])
     b = coefficients[0]
     
-    # Построим график исходных данных и аппроксимированной кривой
     x_fit = np.linspace(min(x_values), max(x_values), 200)
     y_fit = a * np.exp(b * x_fit)
     plt.figure()
@@ -207,7 +203,6 @@ def cubic_spline(params):
         return {"error": "Недостаточно точек для интерполяции"}
     
     cs = CubicSpline(x_values, y_values)
-    # Построим график: исходные точки и интерполированная функция
     x_dense = np.linspace(min(x_values), max(x_values), 200)
     y_dense = cs(x_dense)
     plt.figure()
@@ -237,16 +232,13 @@ def picard_method(params):
         y_new = 1 + diff(f, x)
         approximations.append(str(y_new))
     
-    # Для визуализации построим простую таблицу (в виде графика) если возможно
-    # Если приближения можно привести к числам, то можно построить график.
-    # Здесь оставим только текстовую таблицу
     return {"approximations": approximations, f"y({x_val})": approximations[-1]}
 
 def simpsons_rule(params):
     """Метод Симпсона для вычисления определенного интеграла с графиком разбиения."""
     try:
-        f_values = np.array([float(v) for v in params.get('f_values', '').split(',')])
         x_values = np.array([float(x) for x in params.get('x_values', '').split(',')])
+        f_values = np.array([float(v) for v in params.get('f_values', '').split(',')])
     except Exception as e:
         return {"error": "Неверный формат входных данных. Используйте запятые для разделения чисел."}
     
@@ -256,7 +248,6 @@ def simpsons_rule(params):
     h = (x_values[-1] - x_values[0]) / (len(x_values) - 1)
     integral = (h / 3) * (f_values[0] + 4 * sum(f_values[1:-1:2]) + 2 * sum(f_values[2:-2:2]) + f_values[-1])
     
-    # Построим график: исходные точки и заливку под кривой
     plt.figure()
     plt.plot(x_values, f_values, "bo-", label="f(x)")
     plt.fill_between(x_values, f_values, color="lightblue", alpha=0.5)
