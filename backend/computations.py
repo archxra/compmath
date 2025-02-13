@@ -101,29 +101,35 @@ def find_roots(params):
     return result
 
 def relaxation_method(params):
-    """Метод релаксации для решения уравнения x = f(x) с графиком сходимости."""
+    """Метод релаксации для решения уравнения x = f(x) с графиком сходимости.
+       Если задан параметр omega, используется формула: x_next = ω·f(x) + (1-ω)·x"""
     x0 = float(params.get('x0', 0))
     tol = float(params.get('tol', 1e-6))
     max_iter = int(params.get('max_iter', 100))
+    omega = float(params.get('omega', 1))  # по умолчанию ω = 1 (то есть метод простых итераций)
     
-    def f(x): return np.cos(x)
+    # Примерная функция: f(x) = cos(x)
+    def f(x): 
+        return np.cos(x)
     
     iterations_list = [x0]
     x = x0
     count = 0
     while count < max_iter:
-        x_next = f(x)
+        # Если задано ω, используем формулу релаксации:
+        x_next = omega * f(x) + (1 - omega) * x
         iterations_list.append(x_next)
         if abs(x_next - x) < tol:
             break
         x = x_next
         count += 1
 
+    # Построение графика сходимости
     plt.figure()
     plt.plot(iterations_list, "o-", color="purple")
-    plt.xlabel("Номер итерации")
+    plt.xlabel("Iteration")
     plt.ylabel("x")
-    plt.title("Сходимость метода релаксации")
+    plt.title("Convergence of Relaxation Method")
     plt.grid()
     img = io.BytesIO()
     plt.savefig(img, format='png', bbox_inches="tight")

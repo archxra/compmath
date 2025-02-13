@@ -1,3 +1,21 @@
+function addExpRow() {
+    let tbody = document.getElementById("exp-tbody");
+    let newRow = `<tr>
+                    <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="exp-x"></td>
+                    <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="exp-y"></td>
+                  </tr>`;
+    tbody.insertAdjacentHTML('beforeend', newRow);
+}
+
+function addSplineRow() {
+    let tbody = document.getElementById("spline-tbody");
+    let newRow = `<tr>
+                    <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="spline-x"></td>
+                    <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="spline-y"></td>
+                  </tr>`;
+    tbody.insertAdjacentHTML('beforeend', newRow);
+}
+
 function updateForm() {
     let method = document.getElementById("method").value;
     let formContainer = document.getElementById("dynamic-form");
@@ -18,10 +36,12 @@ function updateForm() {
         formContainer.innerHTML = `
             <label for="x0">Initial Guess (x0):</label>
             <input type="number" id="x0">
-            <label for="tol">Tolerance:</label>
+            <label for="tol">Tolerance (ε):</label>
             <input type="number" step="0.000001" id="tol">
             <label for="max_iter">Max Iterations:</label>
             <input type="number" id="max_iter">
+            <label for="omega">Relaxation Coefficient (ω):</label>
+            <input type="number" step="0.01" id="omega" placeholder="например, 0.8">
         `;
     } else if (method === "4") { // Power Method
         formContainer.innerHTML = `
@@ -55,17 +75,41 @@ function updateForm() {
         `;
     } else if (method === "5") { // Exponential Fit
         formContainer.innerHTML = `
-            <label for="x_values">x values (comma-separated):</label>
-            <input type="text" id="x_values">
-            <label for="y_values">y values (comma-separated):</label>
-            <input type="text" id="y_values">
-        `;
+            <p>Введите данные для аппроксимации:</p>
+            <table id="exp-table" style="margin: 0; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding:5px;">x</th>
+                        <th style="padding:5px;">y</th>
+                    </tr>
+                </thead>
+                <tbody id="exp-tbody">
+                    <tr>
+                        <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="exp-x"></td>
+                        <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="exp-y"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" onclick="addExpRow()">Add Row</button>
+        `;    
     } else if (method === "6") { // Cubic Spline
         formContainer.innerHTML = `
-            <label for="x_values_spline">x values (comma-separated):</label>
-            <input type="text" id="x_values_spline">
-            <label for="y_values_spline">y values (comma-separated):</label>
-            <input type="text" id="y_values_spline">
+            <p>Введите данные для сплайн-интерполяции:</p>
+            <table id="spline-table" style="margin: 0; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding:5px;">x</th>
+                        <th style="padding:5px;">y</th>
+                    </tr>
+                </thead>
+                <tbody id="spline-tbody">
+                    <tr>
+                        <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="spline-x"></td>
+                        <td style="padding:5px;"><input type="number" step="any" style="width:80px;" class="spline-y"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" onclick="addSplineRow()">Add Row</button>
         `;
     } else if (method === "7") { // Picard Method
         formContainer.innerHTML = `
@@ -98,8 +142,9 @@ function updateForm() {
         params = {
             x0: parseFloat(document.getElementById("x0").value),
             tol: parseFloat(document.getElementById("tol").value),
-            max_iter: parseInt(document.getElementById("max_iter").value)
-        };
+            max_iter: parseInt(document.getElementById("max_iter").value),
+            omega: parseFloat(document.getElementById("omega").value)  // новый параметр
+        };    
     } else if (method === "4") { // Power Method
         params = {
             a11: parseFloat(document.getElementById("a11").value),
@@ -110,15 +155,35 @@ function updateForm() {
             max_iter: parseInt(document.getElementById("max_iter_power").value)
         };
     } else if (method === "5") { // Exponential Fit
+        let xs = document.querySelectorAll(".exp-x");
+        let ys = document.querySelectorAll(".exp-y");
+        let x_values = [];
+        let y_values = [];
+        xs.forEach(input => {
+            if(input.value !== "") x_values.push(input.value);
+        });
+        ys.forEach(input => {
+            if(input.value !== "") y_values.push(input.value);
+        });
         params = {
-            x_values: document.getElementById("x_values").value,
-            y_values: document.getElementById("y_values").value
-        };
+            x_values: x_values.join(","),
+            y_values: y_values.join(",")
+        };    
     } else if (method === "6") { // Cubic Spline
+        let xs = document.querySelectorAll(".spline-x");
+        let ys = document.querySelectorAll(".spline-y");
+        let x_values = [];
+        let y_values = [];
+        xs.forEach(input => {
+            if(input.value !== "") x_values.push(input.value);
+        });
+        ys.forEach(input => {
+            if(input.value !== "") y_values.push(input.value);
+        });
         params = {
-            x_values: document.getElementById("x_values_spline").value,
-            y_values: document.getElementById("y_values_spline").value
-        };
+            x_values: x_values.join(","),
+            y_values: y_values.join(",")
+        };    
     } else if (method === "7") { // Picard Method
         params = {
             x: parseFloat(document.getElementById("picard_x").value)
