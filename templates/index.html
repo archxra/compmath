@@ -13,14 +13,14 @@
   <form id="form">
     <label for="method">Choose a method:</label>
     <select id="method" name="method" onchange="updateForm()">
-      <option value="1">Plot Graph</option>
-      <option value="2">Find Roots</option>
-      <option value="3">Relaxation Method</option>
-      <option value="4">Power Method</option>
-      <option value="5">Exponential Fit</option>
-      <option value="6">Cubic Spline</option>
-      <option value="7">Picard Method</option>
-      <option value="8">Simpson's Rule</option>
+      <option value="1">Task 1: Graphical Method and Absolute Error</option>
+      <option value="2">Task 2: Compare Root Methods</option>
+      <option value="3">Task 3: Relaxation Method (System)</option>
+      <option value="4">Task 4: Power Method (Eigenvalue of 3x3 Matrix)</option>
+      <option value="5">Task 5: Exponential Curve Fitting</option>
+      <option value="6">Task 6: Cubic Spline Interpolation</option>
+      <option value="7">Task 7: Picard’s Method</option>
+      <option value="8">Task 8: Simpson’s 1/3 Rule</option>
     </select>
   
     <div id="dynamic-form"></div>
@@ -29,11 +29,10 @@
     <button type="button" onclick="clearForm()">Clear</button>
   </form>
   
-  <!-- Контейнер для графика -->
+  <!-- Container for graphs -->
   <div id="graph-container" style="margin-top: 20px;"></div>
 
-  <!-- Таблица для вывода результатов -->
+  <!-- Table for displaying results -->
   <table id="result-table" border="1" style="width: 100%; margin-top: 10px;"></table>
-
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Общий стиль */
+/* Overall style */
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -6,13 +6,13 @@ body {
     background-color: #f4f4f4;
 }
 
-/* Заголовок */
+/* Head title */
 h2 {
     text-align: center;
     color: #333;
 }
 
-/* Форма выбора метода */
+/* Method chosing form */
 label {
     font-weight: bold;
     margin-top: 10px;
@@ -27,7 +27,7 @@ select {
     border-radius: 4px;
 }
 
-/* Динамическая форма */
+/* Dynamic form */
 #dynamic-form {
     background: white;
     padding: 15px;
@@ -36,7 +36,7 @@ select {
     margin-bottom: 20px;
 }
 
-/* Инпуты */
+/* Inputs */
 input {
     width: calc(100% - 16px);
     padding: 8px;
@@ -45,7 +45,7 @@ input {
     border-radius: 4px;
 }
 
-/* Кнопки */
+/* Buttons */
 button {
     display: inline-block;
     padding: 10px 15px;
@@ -61,7 +61,7 @@ button:hover {
     background: #0056b3;
 }
 
-/* График */
+/* Graph */
 #graph-container {
     text-align: center;
     margin-top: 20px;
@@ -76,7 +76,7 @@ button:hover {
     background: white;
 }
 
-/* Таблица результатов */
+/* Results table */
 #result-table {
     width: 100%;
     margin-top: 20px;

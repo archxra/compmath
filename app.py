@@ -1,7 +1,7 @@
 import sys
 import os
 
-# Убедимся, что backend в путях
+# Ensure 'backend' is in the path
 sys.path.append(os.path.abspath("backend"))
 
 from flask import Flask, render_template, request, jsonify
@@ -25,20 +25,18 @@ def compute():
         method = int(data.get("method", 0))
         params = data.get("params", {})
 
-        print(f"✅ Получен запрос: method={method}, params={params}")  # Отладка
+        print(f"✅ Received request: method={method}, params={params}")  # Debug
 
-        # Если это метод 1 (Plot Graph), вызовем plot_graph() без параметров
+        # For Task 1 (Plot Graph), call plot_graph() directly (no input required)
         if method == 1:
-            result = computations.plot_graph()  # result = {"graph": base64_str}
-            # Возвращаем именно строку под ключом graph
+            result = computations.plot_graph()
             return jsonify({"graph": result.get("graph")})
         else:
-            # Для остальных методов вызываем функцию solve(), которая уже вызывает нужный метод
             result = computations.solve(method, params)
             return jsonify({"result": result})
         
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
+        print(f"❌ Error: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
