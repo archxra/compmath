@@ -27,9 +27,9 @@ def compute():
 
         print(f"✅ Received request: method={method}, params={params}")  # Debug
 
-        # For Task 1 (Plot Graph), call plot_graph() directly (no input required)
+        # For Task 1 (Plot Graph), call plot_graph() directly
         if method == 1:
-            result = computations.plot_graph()
+            result = computations.plot_graph()  # returns {"graph": ...}
             return jsonify({"graph": result.get("graph")})
         else:
             result = computations.solve(method, params)
